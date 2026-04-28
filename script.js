@@ -703,14 +703,14 @@ if (aiGenerateBtn) {
       var start = cleaned.indexOf('{');
       var end   = cleaned.lastIndexOf('}');
       if (start === -1 || end === -1) {
-        console.error('[CardNews] 파싱 실패 — 응답 원문:', raw.slice(0, 400));
-        throw new Error('JSON을 찾지 못했습니다. 검색 없이 다시 시도해주세요.');
+        console.error('[CardNews] Claude 응답 원문:', raw);
+        throw new Error('Claude 응답이 JSON이 아닙니다.\n원문: ' + raw.slice(0, 120) + '…');
       }
       var data;
       try {
         data = JSON.parse(cleaned.slice(start, end + 1));
       } catch(parseErr) {
-        console.error('[CardNews] JSON.parse 오류:', parseErr.message, '\n원문:', raw.slice(0, 400));
+        console.error('[CardNews] JSON.parse 오류:', parseErr.message, '\n원문:', raw);
         throw new Error('JSON 파싱 오류: ' + parseErr.message);
       }
 
