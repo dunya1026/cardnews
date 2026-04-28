@@ -1356,6 +1356,34 @@ body {
 }
 .save-toast.visible { opacity: 1; transform: translateY(0); }
 
+/* 웹 검색 토글 */
+.ai-search-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  flex-wrap: wrap;
+}
+.ai-search-toggle:hover { background: rgba(255,255,255,0.06); border-color: rgba(108,63,232,0.3); }
+.ai-search-toggle input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; accent-color: #6C3FE8; flex-shrink: 0; }
+.ai-search-icon { font-size: 15px; }
+.ai-search-label { font-size: 13px; font-weight: 700; color: var(--t1); flex: 1; }
+.ai-search-badge {
+  padding: 2px 7px; border-radius: 20px;
+  background: linear-gradient(90deg, rgba(108,63,232,0.4), rgba(33,150,243,0.3));
+  color: #A78BFA; font-size: 10px; font-weight: 800; letter-spacing: 0.3px;
+}
+.ai-search-toggle small { width: 100%; padding-left: 24px; color: var(--t3); font-size: 11px; }
+.ai-search-toggle:has(input:checked) {
+  border-color: rgba(108,63,232,0.5);
+  background: rgba(108,63,232,0.08);
+}
+
 .btn-reset {
   border-color: rgba(255,77,103,0.4) !important;
   color: #FF7A8A !important;

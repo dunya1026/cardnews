@@ -336,7 +336,7 @@ aiCatTabs.forEach(function(tab) {
 });
 
 /* ── 프롬프트 생성 ── */
-function buildPrompt(topic, category, keywords) {
+function buildPrompt(topic, category, keywords, useSearch) {
   var isStock = category === 'stock';
   var catKr   = isStock ? '주식·경제' : '부동산';
 
@@ -348,7 +348,13 @@ function buildPrompt(topic, category, keywords) {
     ? '"card6": { "title":"제목","i1_num":"01","i1_name":"지표명","i1_desc":"설명","i2_num":"02","i2_name":"지표명","i2_desc":"설명","i3_num":"03","i3_name":"지표명","i3_desc":"설명","i4_num":"04","i4_name":"지표명","i4_desc":"설명","i5_num":"05","i5_name":"지표명","i5_desc":"설명" }'
     : '"card6": { "title":"제목","p1_header":"무주택자","p1_items":["항목1","항목2","항목3","항목4","항목5"],"p2_header":"1주택자","p2_items":["항목1","항목2","항목3","항목4","항목5"] }';
 
-  return '한국 인스타그램 ' + catKr + ' 카드뉴스 8장과 인스타그램 게시물 초안을 작성해주세요.\n\n'
+  var searchInstr = useSearch
+    ? '먼저 웹 검색으로 [' + topic + ']에 관한 최신 뉴스, 실제 수치, 현재 시장 동향을 찾아주세요. '
+      + '검색 결과를 바탕으로 구체적인 날짜·수치·사례를 카드에 반영하세요.\n\n'
+    : '';
+
+  return searchInstr
+    + '한국 인스타그램 ' + catKr + ' 카드뉴스 8장과 인스타그램 게시물 초안을 작성해주세요.\n\n'
     + '주제: ' + topic + '\n'
     + '키워드: ' + (keywords || '없음') + '\n\n'
     + '규칙:\n'
@@ -373,27 +379,48 @@ function buildPrompt(topic, category, keywords) {
     + '}';
 }
 
-/* ── Claude API 호출 ── */
-function callClaude(apiKey, prompt) {
-  return fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-6',
-      max_tokens: 4096,
-      messages: [{ role: 'user', content: prompt }],
-    }),
-  }).then(function(res) {
-    return res.json().then(function(data) {
-      if (!res.ok) throw new Error(data.error ? data.error.message : 'API 오류 (' + res.status + ')');
+/* ── Claude API 호출 (웹 검색 선택 지원) ── */
+function callClaude(apiKey, prompt, useWebSearch) {
+  var headers = {
+    'Content-Type': 'application/json',
+    'x-api-key': apiKey,
+    'anthropic-version': '2023-06-01',
+    'anthropic-dangerous-direct-browser-access': 'true',
+  };
+  if (useWebSearch) headers['anthropic-beta'] = 'web-search-2025-03-05';
+
+  var tools = useWebSearch ? [{ type: 'web_search_20250305', name: 'web_search' }] : undefined;
+  var messages = [{ role: 'user', content: prompt }];
+
+  function request() {
+    var body = { model: 'claude-sonnet-4-6', max_tokens: 5000, messages: messages };
+    if (tools) body.tools = tools;
+    return fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: headers, body: JSON.stringify(body),
+    }).then(function(res) {
+      return res.json().then(function(data) {
+        if (!res.ok) throw new Error(data.error ? data.error.message : 'API 오류 (' + res.status + ')');
+        return data;
+      });
+    }).then(function(data) {
+      var content = data.content || [];
+      /* text 블록이 있으면 완료 */
+      if (content.some(function(b) { return b.type === 'text'; })) return data;
+      /* tool_use 멀티턴 처리 (검색 결과를 Anthropic이 서버에서 채워줌) */
+      if (data.stop_reason === 'tool_use') {
+        messages.push({ role: 'assistant', content: content });
+        var toolResults = content
+          .filter(function(b) { return b.type === 'tool_use'; })
+          .map(function(b) { return { type: 'tool_result', tool_use_id: b.id, content: '' }; });
+        if (toolResults.length) {
+          messages.push({ role: 'user', content: toolResults });
+          return request();
+        }
+      }
       return data;
     });
-  });
+  }
+  return request();
 }
 
 /* ── 카드 채우기 ── */
@@ -551,6 +578,7 @@ var aiGenerateBtn = document.getElementById('aiGenerateBtn');
 var aiTopic       = document.getElementById('aiTopic');
 var aiKeywords    = document.getElementById('aiKeywords');
 var aiStatus      = document.getElementById('aiStatus');
+var aiUseSearch   = document.getElementById('aiUseSearch');
 
 function setStatus(msg, type) {
   if (!aiStatus) return;
@@ -636,13 +664,21 @@ if (aiGenerateBtn) {
     /* 이전 인스타 섹션 초기화 */
     if (instaCopySection) instaCopySection.classList.remove('visible');
 
+    var useSearch = aiUseSearch && aiUseSearch.checked;
     aiGenerateBtn.disabled = true;
-    setStatus('⏳ Claude가 카드 + 게시물 초안을 생성 중입니다... (15~25초)', 'loading');
+    setStatus(
+      useSearch
+        ? '🌐 최신 정보 검색 중... (30~45초)'
+        : '⏳ Claude가 카드 + 게시물 초안을 생성 중입니다... (15~25초)',
+      'loading'
+    );
 
-    var prompt = buildPrompt(topic, selectedCat, aiKeywords ? aiKeywords.value : '');
+    var prompt = buildPrompt(topic, selectedCat, aiKeywords ? aiKeywords.value : '', useSearch);
 
-    callClaude(apiKey, prompt).then(function(res) {
-      var raw = res.content && res.content[0] && res.content[0].text;
+    callClaude(apiKey, prompt, useSearch).then(function(res) {
+      /* text 블록을 위치 관계없이 추출 (웹 검색 시 content[0]이 tool_use일 수 있음) */
+      var textBlock = (res.content || []).find(function(b) { return b.type === 'text'; });
+      var raw = textBlock && textBlock.text;
       if (!raw) throw new Error('응답 내용이 비어있습니다.');
 
       var cleaned = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
