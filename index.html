@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>인스타그램 카드뉴스 시스템 | 주식·부동산</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ======================================================
+     앱 헤더
+     ====================================================== -->
+<header class="app-header">
+  <div class="app-logo">카드<span>뉴스</span> 시스템</div>
+
+  <div class="tabs">
+    <button class="tab active" data-target="stock">📈 주식 샘플</button>
+    <button class="tab" data-target="realestate">🏠 부동산 샘플</button>
+  </div>
+
+  <div class="controls">
+    <div class="scale-control">
+      <span>미리보기 크기</span>
+      <input type="range" id="scaleSlider" min="25" max="65" value="42">
+      <span id="scaleValue">42%</span>
+    </div>
+    <button class="btn" onclick="window.print()">🖨️ 인쇄/내보내기</button>
+  </div>
+</header>
+
+
+<!-- ======================================================
+     📈 주식 카드뉴스 샘플
+     주제: 금리 인하 기대감이 주식시장에 미치는 영향
+     ====================================================== -->
+<section id="stock" class="card-set active">
+
+  <div class="set-header">
+    <div class="set-title">📈 주식 카드뉴스 샘플</div>
+    <div class="set-desc">주제: 금리 인하 기대감이 주식시장에 미치는 영향 (8장 구성)</div>
+  </div>
+
+
+  <!-- ── STOCK CARD 01 / 후킹 표지 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 01 / 08 — 후킹 표지 (Hook)</div>
+    <article class="card stock card-hook">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">📈 주식·경제</div>
+          <div class="page-num">01 / 08</div>
+        </div>
+
+        <div class="hook-badge">🔔 2026 금리 이슈</div>
+
+        <h1 class="hook-title">
+          금리 인하,<br>
+          내 주식에<br>
+          <em>진짜</em><br>호재일까?
+        </h1>
+
+        <div class="hook-divider"></div>
+
+        <p class="hook-sub">
+          기대감과 실제 시장 반응은<br>
+          다릅니다. 차이를 알아야 합니다.
+        </p>
+
+        <div class="hook-bg-number">01</div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── STOCK CARD 02 / 문제 제기 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 02 / 08 — 문제 제기</div>
+    <article class="card stock">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">💭 현실 체크</div>
+          <div class="page-num">02 / 08</div>
+        </div>
+
+        <h2 class="section-title">이런 경험<br>있으신가요?</h2>
+
+        <div class="quote-block">
+          <p class="quote-text">
+            "금리 인하 뉴스 나왔는데,<br>
+            왜 내 계좌는 그대로죠?"
+          </p>
+          <p class="quote-sub">많은 투자자가 겪는 경험입니다.</p>
+        </div>
+
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-num">①</div>
+            <div class="info-content">
+              <div class="info-title">뉴스 타이밍 ≠ 매수 타이밍</div>
+              <div class="info-body">기대감은 뉴스 발표 전에 이미 주가에 반영됩니다.</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-num">②</div>
+            <div class="info-content">
+              <div class="info-title">방향은 맞아도, 타이밍은 다릅니다</div>
+              <div class="info-body">금리와 주가의 관계는 생각보다 복잡합니다.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-question mt-32">
+          💬 비슷한 경험 있으시면 댓글로 알려주세요 ↓
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── STOCK CARD 03 / 핵심 배경 설명 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 03 / 08 — 핵심 배경 설명</div>
+    <article class="card stock">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">📖 기본 원리</div>
+          <div class="page-num">03 / 08</div>
+        </div>
+
+        <h2 class="section-title">금리 ↓ → 주가 ↑<br>왜 그럴까요?</h2>
+        <p class="section-sub">3가지 핵심 메커니즘</p>
+
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-num">1</div>
+            <div class="info-content">
+              <div class="info-title">기업 이익이 늘어납니다</div>
+              <div class="info-body">이자비용 감소 → 순이익 증가 → 주가 상승 기대</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-num">2</div>
+            <div class="info-content">
+              <div class="info-title">자금이 주식으로 이동합니다</div>
+              <div class="info-body">예·적금 금리 하락 → 더 높은 수익을 찾아 주식시장으로</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-num">3</div>
+            <div class="info-content">
+              <div class="info-title">성장주 가치가 재평가됩니다</div>
+              <div class="info-body">할인율 하락 → 미래 이익의 현재 가치 상승 → 성장주·IT 수혜</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── STOCK CARD 04 / 데이터·지표 시각화 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 04 / 08 — 데이터 시각화</div>
+    <article class="card stock">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">📊 섹터 분석</div>
+          <div class="page-num">04 / 08</div>
+        </div>
+
+        <h2 class="section-title" style="margin-bottom:12px">금리 인하 수혜<br>섹터별 비교</h2>
+        <p class="section-sub" style="font-size:26px;margin-bottom:36px">어느 섹터가 더 움직일까요?</p>
+
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">IT · 성장주</span>
+            <div class="bar-track"><div class="bar-fill" style="width:92%"></div></div>
+            <span class="bar-value up">강한 수혜 ↑↑↑</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">바이오 · 헬스</span>
+            <div class="bar-track"><div class="bar-fill" style="width:76%"></div></div>
+            <span class="bar-value up">수혜 ↑↑</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">경기소비재</span>
+            <div class="bar-track"><div class="bar-fill" style="width:60%"></div></div>
+            <span class="bar-value up">보통 ↑</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">배당주 · 리츠</span>
+            <div class="bar-track"><div class="bar-fill fill-warn" style="width:52%"></div></div>
+            <span class="bar-value neutral">중립 →</span>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">은행 · 금융주</span>
+            <div class="bar-track"><div class="bar-fill fill-down" style="width:28%"></div></div>
+            <span class="bar-value down">수혜 제한 ↓</span>
+          </div>
+        </div>
+
+        <p class="source-text mt-32" style="font-size:21px; line-height:1.7">
+          ※ 금리 인하 폭·이유에 따라 실제 영향은 달라질 수 있습니다<br>
+          ※ 특정 섹터 매수·매도 추천이 아닙니다
+        </p>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── STOCK CARD 05 / 흔한 오해 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 05 / 08 — 흔한 오해</div>
+    <article class="card stock">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">⚠️ 흔한 오해</div>
+          <div class="page-num">05 / 08</div>
+        </div>
+
+        <h2 class="section-title">금리 인하에 대한<br>3가지 오해</h2>
+
+        <div class="myth-list">
+          <div class="myth-item">
+            <div class="myth-wrong">
+              <span class="myth-icon-x">✗</span>
+              "금리 인하 발표 직후 주가가 오른다"
+            </div>
+            <div class="myth-correct">
+              <span class="myth-icon-o">→</span>
+              기대감이 이미 선반영된 경우 발표 후 오히려 하락 가능<br>
+              (Buy the rumor, Sell the news 현상)
+            </div>
+          </div>
+          <div class="myth-item">
+            <div class="myth-wrong">
+              <span class="myth-icon-x">✗</span>
+              "금리 내리면 모든 주식이 다 오른다"
+            </div>
+            <div class="myth-correct">
+              <span class="myth-icon-o">→</span>
+              섹터마다 영향이 다르고, 개별 기업 실적이 더 중요할 수 있습니다
+            </div>
+          </div>
+          <div class="myth-item">
+            <div class="myth-wrong">
+              <span class="myth-icon-x">✗</span>
+              "금리 인하 = 지금 바로 사도 된다"
+            </div>
+            <div class="myth-correct">
+              <span class="myth-icon-o">→</span>
+              인하 이유가 경기침체 대응이라면 기업 실적 악화 가능성도 함께 봐야 합니다
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── STOCK CARD 06 / 내게 주는 의미 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 06 / 08 — 내게 주는 의미</div>
+    <article class="card stock">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">🎯 실전 적용</div>
+          <div class="page-num">06 / 08</div>
+        </div>
+
+        <h2 class="section-title" style="margin-bottom:36px">지금 이 지표들을<br>챙기세요</h2>
+
+        <div class="indicator-list">
+          <div class="indicator-item">
+            <div class="indicator-num">01</div>
+            <div class="indicator-content">
+              <div class="indicator-name">기준금리 방향성</div>
+              <div class="indicator-desc">연준 FOMC · 한국은행 금통위 일정과 발언 모니터링</div>
+            </div>
+          </div>
+          <div class="indicator-item">
+            <div class="indicator-num">02</div>
+            <div class="indicator-content">
+              <div class="indicator-name">10년물 국채금리</div>
+              <div class="indicator-desc">금리 인하 기대가 시장에 실제로 반영됐는지 확인</div>
+            </div>
+          </div>
+          <div class="indicator-item">
+            <div class="indicator-num">03</div>
+            <div class="indicator-content">
+              <div class="indicator-name">섹터별 PER 밸류에이션</div>
+              <div class="indicator-desc">주가가 기대감 대비 이미 비싼지 체크</div>
+            </div>
+          </div>
+          <div class="indicator-item">
+            <div class="indicator-num">04</div>
+            <div class="indicator-content">
+              <div class="indicator-name">달러/원 환율</div>
+              <div class="indicator-desc">원화 강세 = 외국인 자금 유입에 유리한 환경</div>
+            </div>
+          </div>
+          <div class="indicator-item">
+            <div class="indicator-num">05</div>
+            <div class="indicator-content">
+              <div class="indicator-name">외국인 순매수 동향</div>
+              <div class="indicator-desc">코스피 시장 방향성의 선행 신호</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── STOCK CARD 07 / 체크리스트 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 07 / 08 — 체크리스트 (저장 유도)</div>
+    <article class="card stock">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">✅ 저장 필수</div>
+          <div class="page-num">07 / 08</div>
+        </div>
+
+        <h2 class="section-title">금리 인하 국면<br>투자 체크리스트</h2>
+
+        <div class="checklist">
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">현재 기준금리와 인하 기대 폭을 파악했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">보유 종목의 금리 민감도를 확인했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">금리 인하 이유 (연착륙 vs 침체 대응)를 구분했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">기대감이 주가에 이미 선반영됐는지 체크했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">환율 영향을 받는 종목인지 확인했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">포트폴리오 섹터 비중을 점검했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">뉴스 타이밍 ≠ 매수 타이밍임을 인지했나요?</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── STOCK CARD 08 / 마무리 CTA ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 08 / 08 — 마무리 CTA</div>
+    <article class="card stock">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">📣 마무리</div>
+          <div class="page-num">08 / 08</div>
+        </div>
+
+        <div class="cta-visual">
+          <div class="cta-icon">📈</div>
+          <h2 class="cta-title">경제 뉴스,<br>쉽게 해석하고<br>싶다면</h2>
+          <p class="cta-body">
+            복잡한 금융 뉴스를 쉽고 빠르게 정리해드립니다.<br>
+            주식·경제 흐름, 쉽게 이해하고 싶은 분을 위한 계정입니다.
+          </p>
+          <div class="cta-actions">
+            <div class="cta-btn cta-btn-primary">팔로우하기 @fincard.kr</div>
+            <div class="cta-btn cta-btn-secondary">🔖 이 카드 저장해두기</div>
+          </div>
+          <div class="cta-question">
+            💬 여러분은 금리 뉴스를 어떻게 활용하시나요?<br>
+            댓글로 알려주세요 ↓
+          </div>
+        </div>
+
+        <p class="disclaimer">
+          본 콘텐츠는 정보 제공 목적이며, 특정 종목의 매수·매도를 권유하지 않습니다.<br>
+          투자 판단은 개인의 책임입니다. | 2026년 4월 기준 | @fincard.kr
+        </p>
+
+      </div>
+    </article>
+  </div>
+
+</section><!-- end #stock -->
+
+
+<!-- ======================================================
+     🏠 부동산 카드뉴스 샘플
+     주제: 거래량으로 보는 집값 흐름
+     ====================================================== -->
+<section id="realestate" class="card-set">
+
+  <div class="set-header">
+    <div class="set-title">🏠 부동산 카드뉴스 샘플</div>
+    <div class="set-desc">주제: 거래량으로 보는 집값 흐름 (8장 구성)</div>
+  </div>
+
+
+  <!-- ── RE CARD 01 / 후킹 표지 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 01 / 08 — 후킹 표지 (Hook)</div>
+    <article class="card realestate card-hook">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">🏠 부동산</div>
+          <div class="page-num">01 / 08</div>
+        </div>
+
+        <div class="hook-badge">🔍 2026 부동산 흐름</div>
+
+        <h1 class="hook-title">
+          집값,<br>
+          뉴스보다<br>
+          <em>거래량</em>이<br>
+          먼저 말합니다
+        </h1>
+
+        <div class="hook-divider"></div>
+
+        <p class="hook-sub">
+          가격보다 앞서 움직이는<br>
+          시장 신호를 읽는 법
+        </p>
+
+        <div class="hook-bg-number">01</div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── RE CARD 02 / 문제 제기 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 02 / 08 — 문제 제기</div>
+    <article class="card realestate">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">💭 현실 체크</div>
+          <div class="page-num">02 / 08</div>
+        </div>
+
+        <h2 class="section-title">집값 뉴스가<br>헷갈리는 이유</h2>
+
+        <div class="quote-block">
+          <p class="quote-text">
+            "집값 오른다는 뉴스, 내린다는 뉴스.<br>
+            어느 것을 믿어야 할까요?"
+          </p>
+          <p class="quote-sub">많은 분들이 느끼는 혼란입니다.</p>
+        </div>
+
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-num">①</div>
+            <div class="info-content">
+              <div class="info-title">뉴스는 '결과'를 보도합니다</div>
+              <div class="info-body">이미 오른 가격, 이미 내린 거래를 뒤늦게 전합니다.</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-num">②</div>
+            <div class="info-content">
+              <div class="info-title">필요한 건 '방향'을 읽는 능력</div>
+              <div class="info-body">집값은 거래량보다 늦게 움직입니다. 거래량이 먼저입니다.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cta-question mt-32">
+          💬 집값 뉴스 보다가 혼란스러우셨던 경험, 댓글로 공유해요 ↓
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── RE CARD 03 / 핵심 배경 설명 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 03 / 08 — 핵심 배경 설명</div>
+    <article class="card realestate">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">📖 기본 원리</div>
+          <div class="page-num">03 / 08</div>
+        </div>
+
+        <h2 class="section-title">거래량이<br>먼저 반응하는 이유</h2>
+        <p class="section-sub">집값보다 거래량을 먼저 봐야 하는 3가지 이유</p>
+
+        <div class="info-cards">
+          <div class="info-card">
+            <div class="info-num">1</div>
+            <div class="info-content">
+              <div class="info-title">거래량 = 실수요 반영</div>
+              <div class="info-body">실제로 집을 사려는 사람이 늘었다는 직접적인 증거입니다.</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-num">2</div>
+            <div class="info-content">
+              <div class="info-title">수요 증가 → 가격 상승 선행</div>
+              <div class="info-body">사려는 사람이 많아지면 가격은 뒤따라 올라가는 구조입니다.</div>
+            </div>
+          </div>
+          <div class="info-card">
+            <div class="info-num">3</div>
+            <div class="info-content">
+              <div class="info-title">거래량 감소 = 관망 신호</div>
+              <div class="info-body">시장 참여자들이 방향을 확인하며 기다리고 있다는 의미입니다.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── RE CARD 04 / 데이터·시각화 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 04 / 08 — 데이터 시각화</div>
+    <article class="card realestate">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">📊 시장 해석</div>
+          <div class="page-num">04 / 08</div>
+        </div>
+
+        <h2 class="section-title" style="margin-bottom:12px">거래량으로<br>시장 읽는 법</h2>
+        <p class="section-sub" style="font-size:26px;margin-bottom:36px">3가지 시나리오별 해석</p>
+
+        <div class="scenario-list">
+          <div class="scenario-item">
+            <div class="scenario-badge">A</div>
+            <div class="scenario-body">
+              <div class="scenario-cond">거래량 증가 + 가격 보합</div>
+              <div class="scenario-result">상승 준비 중인 시장 — 선행 매수 검토 구간</div>
+            </div>
+            <div class="scenario-arrow up">↑</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-badge">B</div>
+            <div class="scenario-body">
+              <div class="scenario-cond">거래량 감소 + 가격 보합</div>
+              <div class="scenario-result">관망세 — 추가 방향 확인 후 판단 필요</div>
+            </div>
+            <div class="scenario-arrow caution">→</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-badge">C</div>
+            <div class="scenario-body">
+              <div class="scenario-cond">거래량 증가 + 가격 상승</div>
+              <div class="scenario-result">이미 진행 중인 상승장 — 뒤늦은 진입 신중히</div>
+            </div>
+            <div class="scenario-arrow caution">⚠</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-badge">D</div>
+            <div class="scenario-body">
+              <div class="scenario-cond">거래량 감소 + 가격 하락</div>
+              <div class="scenario-result">하락 진행 중 — 추가 하락 가능성 모니터링</div>
+            </div>
+            <div class="scenario-arrow down">↓</div>
+          </div>
+        </div>
+
+        <p class="source-text mt-24" style="font-size:21px">
+          ※ 시나리오는 일반적 패턴이며, 지역·시기에 따라 다를 수 있습니다
+        </p>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── RE CARD 05 / 흔한 오해 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 05 / 08 — 흔한 오해</div>
+    <article class="card realestate">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">⚠️ 흔한 오해</div>
+          <div class="page-num">05 / 08</div>
+        </div>
+
+        <h2 class="section-title">거래량에 대한<br>3가지 오해</h2>
+
+        <div class="myth-list">
+          <div class="myth-item">
+            <div class="myth-wrong">
+              <span class="myth-icon-x">✗</span>
+              "거래량 많으면 무조건 좋다"
+            </div>
+            <div class="myth-correct">
+              <span class="myth-icon-o">→</span>
+              투기성 거래량 폭증은 오히려 과열 조정의 신호일 수 있습니다
+            </div>
+          </div>
+          <div class="myth-item">
+            <div class="myth-wrong">
+              <span class="myth-icon-x">✗</span>
+              "거래량 적으면 집값이 내린다"
+            </div>
+            <div class="myth-correct">
+              <span class="myth-icon-o">→</span>
+              매물도 함께 적으면 거래량 감소에도 가격이 지지될 수 있습니다
+            </div>
+          </div>
+          <div class="myth-item">
+            <div class="myth-wrong">
+              <span class="myth-icon-x">✗</span>
+              "서울 거래량만 보면 된다"
+            </div>
+            <div class="myth-correct">
+              <span class="myth-icon-o">→</span>
+              지역별 온도차가 크므로, 내 관심 지역의 거래량을 직접 확인해야 합니다
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── RE CARD 06 / 내게 주는 의미 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 06 / 08 — 내게 주는 의미</div>
+    <article class="card realestate">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">🏷️ 내 상황에 맞게</div>
+          <div class="page-num">06 / 08</div>
+        </div>
+
+        <h2 class="section-title" style="margin-bottom:32px">상황별<br>체크포인트</h2>
+
+        <div class="persona-split">
+          <div class="persona-card">
+            <div class="persona-header">무주택자</div>
+            <ul class="persona-list">
+              <li>거래량 + 전세가율 함께 확인</li>
+              <li>전세가율 60% 이상 = 실수요 뒷받침</li>
+              <li>거래량 ↑ + 전세가율 ↑ = 행동 신호</li>
+              <li>매수 전 대출 한도 먼저 파악</li>
+              <li>청약·정책 대출 활용 여부 검토</li>
+            </ul>
+          </div>
+          <div class="persona-card">
+            <div class="persona-header">1주택자</div>
+            <ul class="persona-list">
+              <li>매매/전세 갭 추이 확인</li>
+              <li>갭 축소 + 거래량 ↑ = 상승 여력 신호</li>
+              <li>갭 확대 + 거래량 ↓ = 조정 대비</li>
+              <li>1~2년 후 입주 물량 확인 필수</li>
+              <li>양도세·보유세 세금 시뮬레이션</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── RE CARD 07 / 체크리스트 ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 07 / 08 — 체크리스트 (저장 유도)</div>
+    <article class="card realestate">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">✅ 저장 필수</div>
+          <div class="page-num">07 / 08</div>
+        </div>
+
+        <h2 class="section-title">집값 판단 전<br>반드시 확인하세요</h2>
+
+        <div class="checklist">
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">관심 지역 최근 3개월 거래량을 확인했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">전세가율이 60% 이상인지 체크했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">미분양 물량 추이를 확인했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">1~2년 후 입주 예정 물량을 조사했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">현재 기준금리와 대출 규제를 파악했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">호가와 실거래가 차이를 확인했나요?</span>
+          </div>
+          <div class="check-item">
+            <div class="check-box"></div>
+            <span class="check-text">청약·정책 대출 활용 가능 여부를 검토했나요?</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="source-text">정보 제공 목적 / 투자 판단은 본인 책임</div>
+          <div class="account-tag">@fincard.kr</div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+
+  <!-- ── RE CARD 08 / 마무리 CTA ── -->
+  <div class="card-preview-wrap">
+    <div class="card-index">CARD 08 / 08 — 마무리 CTA</div>
+    <article class="card realestate">
+      <div class="card-inner">
+
+        <div class="card-top">
+          <div class="category-label">📣 마무리</div>
+          <div class="page-num">08 / 08</div>
+        </div>
+
+        <div class="cta-visual">
+          <div class="cta-icon">🏠</div>
+          <h2 class="cta-title">부동산 뉴스,<br>내게 맞게<br>해석하고 싶다면</h2>
+          <p class="cta-body">
+            복잡한 부동산 시장 흐름을 쉽고 정확하게 정리해드립니다.<br>
+            내 집 마련 준비 중인 분들을 위한 계정입니다.
+          </p>
+          <div class="cta-actions">
+            <div class="cta-btn cta-btn-primary">팔로우하기 @fincard.kr</div>
+            <div class="cta-btn cta-btn-secondary">🔖 이 카드 저장해두기</div>
+          </div>
+          <div class="cta-question">
+            💬 지금 부동산 시장, 어떻게 보고 계신가요?<br>
+            여러분의 생각을 댓글로 나눠요 ↓
+          </div>
+        </div>
+
+        <p class="disclaimer">
+          본 콘텐츠는 정보 제공 목적이며, 특정 부동산의 매수·매도를 권유하지 않습니다.<br>
+          투자 판단은 개인의 책임입니다. | 2026년 4월 기준 | @fincard.kr
+        </p>
+
+      </div>
+    </article>
+  </div>
+
+</section><!-- end #realestate -->
+
+
+<script src="script.js"></script>
+</body>
+</html>
