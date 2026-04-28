@@ -892,6 +892,60 @@ body {
 .z1     { position: relative; z-index: 1; }
 
 /* ============================================================
+   편집 모드
+   ============================================================ */
+
+/* 편집 가능한 요소 표시 */
+.edit-mode .card [contenteditable] {
+  outline: 2px dashed rgba(33, 150, 243, 0.45);
+  outline-offset: 3px;
+  border-radius: 4px;
+  cursor: text;
+  transition: outline-color 0.15s, background 0.15s;
+}
+.edit-mode .card [contenteditable]:hover {
+  outline-color: rgba(33, 150, 243, 0.9);
+  background: rgba(33, 150, 243, 0.06);
+}
+.edit-mode .card [contenteditable]:focus {
+  outline-color: #2196F3;
+  outline-style: solid;
+  background: rgba(33, 150, 243, 0.09);
+}
+
+/* 편집 모드 활성 버튼 */
+.btn.edit-active {
+  background: var(--s-accent) !important;
+  color: #fff !important;
+  border-color: var(--s-accent) !important;
+}
+
+/* PNG 저장 버튼 (카드 하단) */
+.download-btn {
+  position: absolute;
+  bottom: -46px;
+  right: 0;
+  padding: 9px 18px;
+  background: #1565C0;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  white-space: nowrap;
+  z-index: 10;
+}
+.download-btn:hover    { background: #2196F3; transform: translateY(-1px); }
+.download-btn:active   { transform: translateY(0); }
+.download-btn:disabled { opacity: 0.55; cursor: wait; }
+
+/* 편집 모드일 때 카드 미리보기 커서 */
+.edit-mode .card-preview-wrap { cursor: default; }
+
+/* ============================================================
    인쇄 / 내보내기 모드
    ============================================================ */
 @media print {
