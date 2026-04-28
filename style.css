@@ -1608,3 +1608,212 @@ body {
   .card-index { display: none; }
   .set-header { display: none; }
 }
+
+/* ============================================================
+   🎨 다이나믹 레이아웃 변형 — layout-* 클래스
+   (AI가 주제·내용에 따라 자동 선택)
+   ============================================================ */
+
+/* ── Card 1 — 후킹 표지 ─────────────────────────────────── */
+
+/* center: 중앙 정렬 매거진 스타일 */
+.layout-center.card-hook .card-inner {
+  align-items: center;
+  text-align: center;
+}
+.layout-center.card-hook .hook-divider {
+  margin-left: auto;
+  margin-right: auto;
+}
+.layout-center.card-hook .hook-bg-number {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+
+/* impact: 임팩트 초대형 타이포 */
+.layout-impact.card-hook .hook-title {
+  font-size: 118px;
+  letter-spacing: -7px;
+  line-height: 1.0;
+}
+.layout-impact.card-hook .hook-sub {
+  font-size: 32px;
+  font-weight: 500;
+}
+.layout-impact.card-hook .hook-badge {
+  font-size: 21px;
+  padding: 9px 20px;
+}
+
+/* ── Card 2 — 문제 제기 ────────────────────────────────── */
+
+/* wide: 인용구 작게 + info-카드 2열 그리드 */
+.layout-wide .quote-block {
+  padding: 28px 40px;
+  margin-bottom: 28px;
+}
+.layout-wide .quote-text { font-size: 32px; }
+.layout-wide .info-cards { flex-direction: row; gap: 18px; }
+.layout-wide .info-card {
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 28px 16px;
+  gap: 12px;
+}
+.layout-wide .info-num { font-size: 58px; min-width: auto; }
+.layout-wide .info-title { font-size: 27px; }
+.layout-wide .info-body  { font-size: 24px; }
+
+/* bigquote: 인용구 크게, 공감 유도형 */
+.layout-bigquote .quote-block { padding: 52px 56px; margin-bottom: 32px; }
+.layout-bigquote .quote-text  { font-size: 46px; font-weight: 800; line-height: 1.5; }
+.layout-bigquote .info-card   { padding: 22px 32px; gap: 20px; }
+.layout-bigquote .info-num    { font-size: 36px; }
+.layout-bigquote .info-title  { font-size: 28px; }
+.layout-bigquote .info-body   { font-size: 24px; }
+
+/* ── Card 3 — 핵심 배경 설명 ────────────────────────────── */
+
+/* large: 번호 초대형, 원리 강조형 */
+.layout-large .info-num {
+  font-size: 84px;
+  line-height: 0.9;
+  min-width: 80px;
+}
+.layout-large .info-card {
+  align-items: center;
+  padding: 28px 40px;
+  gap: 28px;
+}
+.layout-large .info-title { font-size: 34px; }
+
+/* flow: 세로 흐름 연결형 */
+.layout-flow .info-cards { gap: 0; }
+.layout-flow .info-card {
+  border-radius: 0;
+  border: none;
+  border-left: 5px solid rgba(255,255,255,0.10);
+  border-top: 1px solid rgba(255,255,255,0.05);
+  background: transparent;
+  padding: 28px 36px 28px 40px;
+}
+.layout-flow .info-card:first-child { border-top: none; border-radius: 12px 12px 0 0; }
+.layout-flow .info-card:last-child  { border-radius: 0 0 12px 12px; }
+.stock.layout-flow      .info-card { border-left-color: rgba(33,150,243,0.35); }
+.realestate.layout-flow .info-card { border-left-color: rgba(245,166,35,0.35); }
+.layout-flow .info-num { font-size: 48px; min-width: 54px; }
+
+/* ── Card 4 — 데이터 시각화 ─────────────────────────────── */
+
+/* highlight: 상위 항목 강조 (첫 번째 바 더 크게) */
+.layout-highlight .bar-row:first-child .bar-track { height: 50px; }
+.layout-highlight .bar-row:first-child .bar-label {
+  font-size: 29px;
+  font-weight: 700;
+  color: var(--t1);
+}
+.layout-highlight .bar-row:first-child .bar-value { font-size: 28px; }
+
+/* ── Card 5 — 오해/정정 ─────────────────────────────────── */
+
+/* contrast: 오해=적색 틴트, 정정=녹색 틴트로 강한 대비 */
+.layout-contrast .myth-item {
+  padding: 0;
+  overflow: hidden;
+  background: none;
+  border: none;
+}
+.layout-contrast .myth-wrong {
+  background: rgba(255,77,103,0.12);
+  border-radius: 12px 12px 0 0;
+  padding: 22px 36px;
+  margin-bottom: 0;
+  font-size: 26px;
+}
+.layout-contrast .myth-correct {
+  background: rgba(0,212,170,0.10);
+  border-radius: 0 0 12px 12px;
+  padding: 22px 36px;
+  font-size: 26px;
+}
+
+/* ── Card 6 — 지표 리스트 ──────────────────────────────── */
+
+/* grid: 2열 그리드 레이아웃 */
+.layout-grid .indicator-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.layout-grid .indicator-item {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 26px 24px;
+}
+.layout-grid .indicator-num  { font-size: 34px; }
+.layout-grid .indicator-name { font-size: 27px; }
+.layout-grid .indicator-desc { font-size: 21px; }
+
+/* ── Card 7 — 체크리스트 ──────────────────────────────── */
+
+/* numbered: 체크박스 → 번호 서클 */
+.layout-numbered .checklist { counter-reset: check-num; }
+.layout-numbered .check-item { counter-increment: check-num; }
+.layout-numbered .check-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+.layout-numbered .check-box::after { content: counter(check-num); }
+.stock.layout-numbered      .check-box { background: var(--s-accent); }
+.realestate.layout-numbered .check-box { background: var(--r-accent); }
+
+/* priority: 우선순위 색상 강조 */
+.layout-priority .check-item:nth-child(-n+3) {
+  border-left: 5px solid rgba(239,68,68,0.7);
+  background: rgba(239,68,68,0.06);
+}
+.layout-priority .check-item:nth-child(n+4):nth-child(-n+5) {
+  border-left: 5px solid rgba(245,158,11,0.7);
+  background: rgba(245,158,11,0.06);
+}
+.layout-priority .check-item:nth-child(n+6) {
+  border-left: 5px solid rgba(34,197,94,0.55);
+  background: rgba(34,197,94,0.05);
+}
+
+/* ── Card 8 — CTA ──────────────────────────────────────── */
+
+/* left: 좌측 정렬, accent 라인 강조형 */
+.layout-left .cta-visual {
+  align-items: flex-start;
+  text-align: left;
+}
+.layout-left .cta-icon { font-size: 72px; margin-bottom: 24px; }
+.layout-left .cta-title {
+  font-size: 62px;
+  letter-spacing: -2px;
+}
+.layout-left .cta-body {
+  border-left: 6px solid;
+  padding-left: 28px;
+  max-width: 100%;
+  font-size: 32px;
+  text-align: left;
+}
+.stock.layout-left      .cta-body { border-color: var(--s-accent); }
+.realestate.layout-left .cta-body { border-color: var(--r-accent); }
+.layout-left .cta-actions { max-width: 100%; align-items: flex-start; }
+.layout-left .cta-question { text-align: left; }

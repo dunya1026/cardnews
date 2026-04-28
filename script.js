@@ -361,15 +361,24 @@ function buildPrompt(topic, category, keywords, research) {
     + '- 투자 추천·수익 보장·공포 조장 금지\n'
     + '- 제목 한 줄 15자 이내, 줄바꿈은 \\n 사용\n'
     + '- 반드시 아래 JSON 구조만 반환 (마크다운 코드블록 없이)\n\n'
+    + '각 카드의 "layout" 필드: 주제·내용에 맞게 자율 선택\n'
+    + '• card1: default(좌측정렬) | center(중앙정렬,감성주제) | impact(초대형타이포,충격적뉴스)\n'
+    + '• card2: default(표준) | wide(info2열,요점강조) | bigquote(인용구크게,공감유도)\n'
+    + '• card3: default(표준) | large(번호초대형,원리강조) | flow(흐름연결,단계적설명)\n'
+    + '• card4: default(바차트) | highlight(1위항목강조)\n'
+    + '• card5: default(표준) | contrast(오해/정정 색상강조)\n'
+    + '• card6: default(리스트) | grid(2열그리드,지표가5개일때)\n'
+    + '• card7: default(체크박스) | numbered(번호서클) | priority(우선순위3단계색상)\n'
+    + '• card8: default(중앙CTA) | left(좌측정렬,정보강조형)\n\n'
     + '{\n'
-    + '  "card1": { "badge":"이모지+짧은라벨","title":"후킹제목(\\n 구분)","emphasis":"강조단어1개","sub":"부제목" },\n'
-    + '  "card2": { "title":"섹션제목","quote":"공감인용구","quote_sub":"인용부연","point1_title":"포인트1","point1_body":"설명","point2_title":"포인트2","point2_body":"설명","comment":"💬 댓글유도문구 ↓" },\n'
-    + '  "card3": { "title":"섹션제목","sub":"부제목","p1_num":"1","p1_title":"이유1","p1_body":"설명","p2_num":"2","p2_title":"이유2","p2_body":"설명","p3_num":"3","p3_title":"이유3","p3_body":"설명" },\n'
-    + '  ' + card4Schema + ',\n'
-    + '  "card5": { "title":"오해섹션제목","m1_wrong":"통념1","m1_correct":"실제1","m2_wrong":"통념2","m2_correct":"실제2","m3_wrong":"통념3","m3_correct":"실제3" },\n'
-    + '  ' + card6Schema + ',\n'
-    + '  "card7": { "title":"체크리스트제목","c1":"항목1","c2":"항목2","c3":"항목3","c4":"항목4","c5":"항목5","c6":"항목6","c7":"항목7" },\n'
-    + '  "card8": { "title":"CTA제목(\\n구분)","body":"설명2-3문장","comment":"💬 댓글유도질문 ↓" },\n'
+    + '  "card1": { "badge":"이모지+짧은라벨","title":"후킹제목(\\n 구분)","emphasis":"강조단어1개","sub":"부제목","layout":"default" },\n'
+    + '  "card2": { "title":"섹션제목","quote":"공감인용구","quote_sub":"인용부연","point1_title":"포인트1","point1_body":"설명","point2_title":"포인트2","point2_body":"설명","comment":"💬 댓글유도문구 ↓","layout":"default" },\n'
+    + '  "card3": { "title":"섹션제목","sub":"부제목","p1_num":"1","p1_title":"이유1","p1_body":"설명","p2_num":"2","p2_title":"이유2","p2_body":"설명","p3_num":"3","p3_title":"이유3","p3_body":"설명","layout":"default" },\n'
+    + '  ' + card4Schema.replace(/ }$/, ',"layout":"default" }') + ',\n'
+    + '  "card5": { "title":"오해섹션제목","m1_wrong":"통념1","m1_correct":"실제1","m2_wrong":"통념2","m2_correct":"실제2","m3_wrong":"통념3","m3_correct":"실제3","layout":"default" },\n'
+    + '  ' + card6Schema.replace(/ }$/, ',"layout":"default" }') + ',\n'
+    + '  "card7": { "title":"체크리스트제목","c1":"항목1","c2":"항목2","c3":"항목3","c4":"항목4","c5":"항목5","c6":"항목6","c7":"항목7","layout":"default" },\n'
+    + '  "card8": { "title":"CTA제목(\\n구분)","body":"설명2-3문장","comment":"💬 댓글유도질문 ↓","layout":"default" },\n'
     + '  "instagram": {\n'
     + '    "caption": "인스타그램 본문 캡션 (실제 게시물에 바로 쓸 수 있게). 형식: 첫줄=후킹제목\\n.\\n✅ 이번 카드 핵심 포인트\\n• 포인트1\\n• 포인트2\\n• 포인트3\\n.\\n💡 체크리스트 저장해두시면 나중에 써먹을 수 있어요\\n.\\n💬 댓글유도질문\\n.\\n👉 팔로우유도멘트\\n.\\n─────────────\\n⚠️ 본 콘텐츠는 정보 제공 목적이며 투자 권유가 아닙니다",\n'
     + '    "hashtags": "주제에 맞는 인기 해시태그 20개 (#포함, 공백구분, 주식이면 주식관련 부동산이면 부동산관련)",\n'
@@ -447,6 +456,13 @@ function fillText(el, text) {
   if (el && text !== undefined && text !== null) el.textContent = String(text);
 }
 
+function applyLayout(w, layout) {
+  var card = w.querySelector('article.card');
+  if (!card) return;
+  card.className = card.className.replace(/\blayout-\S+/g, '').trim();
+  if (layout && layout !== 'default') card.classList.add('layout-' + layout);
+}
+
 function fillCards(data, category) {
   var setEl = document.getElementById(category);
   if (!setEl) return;
@@ -464,6 +480,7 @@ function fillCards(data, category) {
       te.innerHTML = html;
     }
     fill(q(w, '.hook-sub'), d.sub);
+    applyLayout(w, d.layout);
   }
 
   /* Card 2 — 문제 제기 */
@@ -475,6 +492,7 @@ function fillCards(data, category) {
     if (infos[0]) { fillText(infos[0].querySelector('.info-title'), d.point1_title); fillText(infos[0].querySelector('.info-body'), d.point1_body); }
     if (infos[1]) { fillText(infos[1].querySelector('.info-title'), d.point2_title); fillText(infos[1].querySelector('.info-body'), d.point2_body); }
     fill(q(w, '.cta-question'), d.comment);
+    applyLayout(w, d.layout);
   }
 
   /* Card 3 — 원리 */
@@ -488,6 +506,7 @@ function fillCards(data, category) {
       fillText(infos[i].querySelector('.info-title'), p[1]);
       fillText(infos[i].querySelector('.info-body'),  p[2]);
     });
+    applyLayout(w, d.layout);
   }
 
   /* Card 4 — 데이터 */
@@ -533,6 +552,7 @@ function fillCards(data, category) {
         if (ae) { ae.className = 'scenario-arrow '+(s.dir||'caution'); ae.textContent = s.dir==='up'?'↑':s.dir==='down'?'↓':'⚠'; }
       });
     }
+    applyLayout(w, d.layout);
   }
 
   /* Card 5 — 오해 */
@@ -546,6 +566,7 @@ function fillCards(data, category) {
       if (we) we.innerHTML = '<span class="myth-icon-x">✗</span> ' + (m[0]||'');
       if (ce) ce.innerHTML = '<span class="myth-icon-o">→</span> ' + (m[1]||'');
     });
+    applyLayout(w, d.layout);
   }
 
   /* Card 6 — 의미 */
@@ -571,6 +592,7 @@ function fillCards(data, category) {
       var lis1 = personas[1].querySelectorAll('.persona-list li');
       (d.p2_items||[]).forEach(function(item,i){ if(lis1[i]) lis1[i].textContent = item; });
     }
+    applyLayout(w, d.layout);
   }
 
   /* Card 7 — 체크리스트 */
@@ -578,6 +600,7 @@ function fillCards(data, category) {
     fill(q(w, '.section-title'), d.title);
     var checks = w.querySelectorAll('.check-text');
     [d.c1,d.c2,d.c3,d.c4,d.c5,d.c6,d.c7].forEach(function(item,i){ if(checks[i]&&item) fillText(checks[i], item); });
+    applyLayout(w, d.layout);
   }
 
   /* Card 8 — CTA */
@@ -585,6 +608,7 @@ function fillCards(data, category) {
     fill(q(w, '.cta-title'),    d.title);
     fill(q(w, '.cta-body'),     d.body);
     fill(q(w, '.cta-question'), d.comment);
+    applyLayout(w, d.layout);
   }
 }
 
@@ -807,15 +831,16 @@ function saveCards(category) {
   var setEl = document.getElementById(category);
   if (!setEl) return;
   var articles = Array.prototype.slice.call(setEl.querySelectorAll('article.card'));
-  var htmlArr = articles.map(function(a) {
+  var dataArr = articles.map(function(a) {
     var clone = a.cloneNode(true);
     clone.querySelectorAll('[contenteditable]').forEach(function(el) {
       el.removeAttribute('contenteditable');
       el.removeAttribute('spellcheck');
     });
-    return clone.innerHTML;
+    var m = a.className.match(/\blayout-(\S+)/);
+    return { html: clone.innerHTML, layout: m ? m[1] : 'default' };
   });
-  try { localStorage.setItem('cn_cards_' + category, JSON.stringify(htmlArr)); } catch(e) {}
+  try { localStorage.setItem('cn_cards_' + category, JSON.stringify(dataArr)); } catch(e) {}
   showSaveToast();
 }
 
@@ -823,12 +848,17 @@ function loadCards(category) {
   try {
     var raw = localStorage.getItem('cn_cards_' + category);
     if (!raw) return;
-    var htmlArr = JSON.parse(raw);
+    var dataArr = JSON.parse(raw);
     var setEl = document.getElementById(category);
     if (!setEl) return;
     var articles = Array.prototype.slice.call(setEl.querySelectorAll('article.card'));
-    htmlArr.forEach(function(html, i) {
-      if (articles[i] && html) articles[i].innerHTML = html;
+    dataArr.forEach(function(item, i) {
+      if (!articles[i] || !item) return;
+      var html   = typeof item === 'string' ? item : item.html;
+      var layout = typeof item === 'object' ? (item.layout || 'default') : 'default';
+      if (html) articles[i].innerHTML = html;
+      articles[i].className = articles[i].className.replace(/\blayout-\S+/g, '').trim();
+      if (layout && layout !== 'default') articles[i].classList.add('layout-' + layout);
     });
   } catch(e) {}
 }
