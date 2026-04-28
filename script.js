@@ -336,7 +336,7 @@ aiCatTabs.forEach(function(tab) {
 });
 
 /* ── 프롬프트 생성 ── */
-function buildPrompt(topic, category, keywords, useSearch) {
+function buildPrompt(topic, category, keywords, research) {
   var isStock = category === 'stock';
   var catKr   = isStock ? '주식·경제' : '부동산';
 
@@ -348,13 +348,11 @@ function buildPrompt(topic, category, keywords, useSearch) {
     ? '"card6": { "title":"제목","i1_num":"01","i1_name":"지표명","i1_desc":"설명","i2_num":"02","i2_name":"지표명","i2_desc":"설명","i3_num":"03","i3_name":"지표명","i3_desc":"설명","i4_num":"04","i4_name":"지표명","i4_desc":"설명","i5_num":"05","i5_name":"지표명","i5_desc":"설명" }'
     : '"card6": { "title":"제목","p1_header":"무주택자","p1_items":["항목1","항목2","항목3","항목4","항목5"],"p2_header":"1주택자","p2_items":["항목1","항목2","항목3","항목4","항목5"] }';
 
-  var searchInstr = useSearch
-    ? '웹 검색으로 [' + topic + ']의 최신 뉴스·실제 수치·시장 동향을 찾아라. '
-      + '검색 결과의 구체적 날짜·수치·사례를 아래 JSON 필드 값에만 반영해라. '
-      + 'JSON 외의 설명 텍스트는 절대 출력하지 마라. 반드시 { 로 시작하는 JSON만 응답해라.\n\n'
+  var researchInstr = research
+    ? '아래 최신 데이터를 카드 내용(수치·날짜·사례)에 최대한 반영하세요:\n' + research + '\n\n'
     : '';
 
-  return searchInstr
+  return researchInstr
     + '한국 인스타그램 ' + catKr + ' 카드뉴스 8장과 인스타그램 게시물 초안을 작성해주세요.\n\n'
     + '주제: ' + topic + '\n'
     + '키워드: ' + (keywords || '없음') + '\n\n'
@@ -380,59 +378,59 @@ function buildPrompt(topic, category, keywords, useSearch) {
     + '}';
 }
 
-/* ── Claude API 호출 (웹 검색 선택 지원) ── */
-function callClaude(apiKey, prompt, useWebSearch) {
-  var headers = {
-    'Content-Type': 'application/json',
-    'x-api-key': apiKey,
-    'anthropic-version': '2023-06-01',
-    'anthropic-dangerous-direct-browser-access': 'true',
-  };
-  if (useWebSearch) headers['anthropic-beta'] = 'web-search-2025-03-05';
+/* ── Step 1: Haiku로 최신 데이터 리서치 (웹 검색 토글 시) ── */
+function fetchResearch(apiKey, topic, catKr) {
+  return fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-haiku-4-5-20251001',
+      max_tokens: 600,
+      messages: [{
+        role: 'user',
+        content: '한국 ' + catKr + ' 분야 [' + topic + ']에 대해 알고 있는 가장 최근(2024~2025년) 구체적 사실을 정리해줘.\n'
+          + '• 실제 수치·통계·날짜 포함\n'
+          + '• 최근 주요 이슈·변화 3가지\n'
+          + '• 현재 시장 상황 핵심\n'
+          + 'bullet point 형식, 한국어, 300자 이내',
+      }],
+    }),
+  }).then(function(res) {
+    return res.json().then(function(data) {
+      if (!res.ok) return '';
+      var tb = (data.content || []).find(function(b) { return b.type === 'text'; });
+      return tb ? tb.text : '';
+    });
+  }).catch(function() { return ''; });
+}
 
-  var tools = useWebSearch ? [{ type: 'web_search_20250305', name: 'web_search' }] : undefined;
-  var messages = [{ role: 'user', content: prompt }];
-  /* JSON 전용 출력 강제 — 검색 결과를 설명 텍스트로 쓰지 말고 JSON 값에만 반영 */
-  var system = 'You must respond with ONLY a valid JSON object. No explanatory text, no markdown fences, no search result summaries outside the JSON. Begin your response with { and end with }.';
-  var MAX_TURNS = 6;
-  var turn = 0;
-
-  function request() {
-    if (++turn > MAX_TURNS) throw new Error('응답 루프 한도 초과');
-    var body = { model: 'claude-sonnet-4-6', max_tokens: 5000, system: system, messages: messages };
-    if (tools) body.tools = tools;
-    return fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST', headers: headers, body: JSON.stringify(body),
-    }).then(function(res) {
-      return res.json().then(function(data) {
-        if (!res.ok) throw new Error(data.error ? data.error.message : 'API 오류 (' + res.status + ')');
-        return data;
-      });
-    }).then(function(data) {
-      var content = data.content || [];
-      var textBlock = content.find(function(b) { return b.type === 'text'; });
-      if (textBlock) return data;
-      /* tool_use → 멀티턴 (웹 검색 결과를 받아 다음 턴에서 JSON 생성) */
-      if (data.stop_reason === 'tool_use') {
-        messages.push({ role: 'assistant', content: content });
-        var toolResults = content
-          .filter(function(b) { return b.type === 'tool_use'; })
-          .map(function(b) {
-            /* web_search 결과는 Anthropic이 채워줌, 나머지는 빈 문자열 */
-            var resultContent = (b.type === 'web_search_20250305' || b.name === 'web_search')
-              ? (b.output || b.result || '')
-              : '';
-            return { type: 'tool_result', tool_use_id: b.id, content: String(resultContent) };
-          });
-        if (toolResults.length) {
-          messages.push({ role: 'user', content: toolResults });
-          return request();
-        }
-      }
+/* ── Step 2: Sonnet으로 JSON 카드 생성 ── */
+function callClaude(apiKey, prompt) {
+  return fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true',
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 5000,
+      system: 'Respond with ONLY a valid JSON object. No markdown, no explanatory text. Start with { end with }.',
+      messages: [{ role: 'user', content: prompt }],
+    }),
+  }).then(function(res) {
+    return res.json().then(function(data) {
+      if (!res.ok) throw new Error(data.error ? data.error.message : 'API 오류 (' + res.status + ')');
       return data;
     });
-  }
-  return request();
+  });
 }
 
 /* ── 카드 채우기 ── */
@@ -677,17 +675,22 @@ if (aiGenerateBtn) {
     if (instaCopySection) instaCopySection.classList.remove('visible');
 
     var useSearch = aiUseSearch && aiUseSearch.checked;
+    var catKr = selectedCat === 'stock' ? '주식·경제' : '부동산';
     aiGenerateBtn.disabled = true;
-    setStatus(
-      useSearch
-        ? '🌐 최신 정보 검색 중... (30~45초)'
-        : '⏳ Claude가 카드 + 게시물 초안을 생성 중입니다... (15~25초)',
-      'loading'
-    );
 
-    var prompt = buildPrompt(topic, selectedCat, aiKeywords ? aiKeywords.value : '', useSearch);
+    var keywords = aiKeywords ? aiKeywords.value : '';
 
-    callClaude(apiKey, prompt, useSearch).then(function(res) {
+    /* 2단계: 리서치 → JSON 생성 */
+    var researchPromise = useSearch
+      ? (setStatus('🔍 최신 데이터 수집 중... (1단계)', 'loading'),
+         fetchResearch(apiKey, topic, catKr))
+      : Promise.resolve('');
+
+    researchPromise.then(function(research) {
+      setStatus('⏳ 카드 + 게시물 생성 중... (15~25초)', 'loading');
+      var prompt = buildPrompt(topic, selectedCat, keywords, research);
+      return callClaude(apiKey, prompt);
+    }).then(function(res) {
       /* text 블록 추출 (웹 검색 시 content[0]이 tool_use일 수 있으므로 find 사용) */
       var textBlock = (res.content || []).find(function(b) { return b.type === 'text'; });
       var raw = textBlock && textBlock.text;
