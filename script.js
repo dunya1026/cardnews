@@ -349,8 +349,9 @@ function buildPrompt(topic, category, keywords, useSearch) {
     : '"card6": { "title":"제목","p1_header":"무주택자","p1_items":["항목1","항목2","항목3","항목4","항목5"],"p2_header":"1주택자","p2_items":["항목1","항목2","항목3","항목4","항목5"] }';
 
   var searchInstr = useSearch
-    ? '먼저 웹 검색으로 [' + topic + ']에 관한 최신 뉴스, 실제 수치, 현재 시장 동향을 찾아주세요. '
-      + '검색 결과를 바탕으로 구체적인 날짜·수치·사례를 카드에 반영하세요.\n\n'
+    ? '웹 검색으로 [' + topic + ']의 최신 뉴스·실제 수치·시장 동향을 찾아라. '
+      + '검색 결과의 구체적 날짜·수치·사례를 아래 JSON 필드 값에만 반영해라. '
+      + 'JSON 외의 설명 텍스트는 절대 출력하지 마라. 반드시 { 로 시작하는 JSON만 응답해라.\n\n'
     : '';
 
   return searchInstr
@@ -391,9 +392,14 @@ function callClaude(apiKey, prompt, useWebSearch) {
 
   var tools = useWebSearch ? [{ type: 'web_search_20250305', name: 'web_search' }] : undefined;
   var messages = [{ role: 'user', content: prompt }];
+  /* JSON 전용 출력 강제 — 검색 결과를 설명 텍스트로 쓰지 말고 JSON 값에만 반영 */
+  var system = 'You must respond with ONLY a valid JSON object. No explanatory text, no markdown fences, no search result summaries outside the JSON. Begin your response with { and end with }.';
+  var MAX_TURNS = 6;
+  var turn = 0;
 
   function request() {
-    var body = { model: 'claude-sonnet-4-6', max_tokens: 5000, messages: messages };
+    if (++turn > MAX_TURNS) throw new Error('응답 루프 한도 초과');
+    var body = { model: 'claude-sonnet-4-6', max_tokens: 5000, system: system, messages: messages };
     if (tools) body.tools = tools;
     return fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST', headers: headers, body: JSON.stringify(body),
@@ -404,14 +410,20 @@ function callClaude(apiKey, prompt, useWebSearch) {
       });
     }).then(function(data) {
       var content = data.content || [];
-      /* text 블록이 있으면 완료 */
-      if (content.some(function(b) { return b.type === 'text'; })) return data;
-      /* tool_use 멀티턴 처리 (검색 결과를 Anthropic이 서버에서 채워줌) */
+      var textBlock = content.find(function(b) { return b.type === 'text'; });
+      if (textBlock) return data;
+      /* tool_use → 멀티턴 (웹 검색 결과를 받아 다음 턴에서 JSON 생성) */
       if (data.stop_reason === 'tool_use') {
         messages.push({ role: 'assistant', content: content });
         var toolResults = content
           .filter(function(b) { return b.type === 'tool_use'; })
-          .map(function(b) { return { type: 'tool_result', tool_use_id: b.id, content: '' }; });
+          .map(function(b) {
+            /* web_search 결과는 Anthropic이 채워줌, 나머지는 빈 문자열 */
+            var resultContent = (b.type === 'web_search_20250305' || b.name === 'web_search')
+              ? (b.output || b.result || '')
+              : '';
+            return { type: 'tool_result', tool_use_id: b.id, content: String(resultContent) };
+          });
         if (toolResults.length) {
           messages.push({ role: 'user', content: toolResults });
           return request();
@@ -676,16 +688,28 @@ if (aiGenerateBtn) {
     var prompt = buildPrompt(topic, selectedCat, aiKeywords ? aiKeywords.value : '', useSearch);
 
     callClaude(apiKey, prompt, useSearch).then(function(res) {
-      /* text 블록을 위치 관계없이 추출 (웹 검색 시 content[0]이 tool_use일 수 있음) */
+      /* text 블록 추출 (웹 검색 시 content[0]이 tool_use일 수 있으므로 find 사용) */
       var textBlock = (res.content || []).find(function(b) { return b.type === 'text'; });
       var raw = textBlock && textBlock.text;
       if (!raw) throw new Error('응답 내용이 비어있습니다.');
 
-      var cleaned = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
+      /* JSON 추출 — 코드블록, 앞뒤 텍스트 제거 후 { } 범위만 파싱 */
+      var cleaned = raw.replace(/```json[\s\S]*?```/g, function(m) {
+        return m.replace(/```json\s*/,'').replace(/\s*```/,'');
+      }).replace(/```/g, '').trim();
       var start = cleaned.indexOf('{');
       var end   = cleaned.lastIndexOf('}');
-      if (start === -1 || end === -1) throw new Error('JSON 형식을 찾을 수 없습니다.');
-      var data = JSON.parse(cleaned.slice(start, end + 1));
+      if (start === -1 || end === -1) {
+        console.error('[CardNews] 파싱 실패 — 응답 원문:', raw.slice(0, 400));
+        throw new Error('JSON을 찾지 못했습니다. 검색 없이 다시 시도해주세요.');
+      }
+      var data;
+      try {
+        data = JSON.parse(cleaned.slice(start, end + 1));
+      } catch(parseErr) {
+        console.error('[CardNews] JSON.parse 오류:', parseErr.message, '\n원문:', raw.slice(0, 400));
+        throw new Error('JSON 파싱 오류: ' + parseErr.message);
+      }
 
       /* 탭 전환 */
       document.querySelectorAll('.tab').forEach(function(t) {
