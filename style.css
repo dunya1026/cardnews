@@ -1211,32 +1211,77 @@ body {
 .ai-status.err     { color: var(--down); }
 
 /* ============================================================
-   인스타그램 게시물 초안 섹션
+   인스타그램 게시물 초안 패널 (메인 페이지 — 가로 3열)
    ============================================================ */
-.ai-modal-box { max-height: 90vh; overflow-y: auto; }
 
-.insta-copy-section {
+.insta-panel {
   display: none;
   flex-direction: column;
-  gap: 12px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  padding-top: 20px;
-  margin-top: 4px;
+  margin: 0 24px 24px;
+  border: 1px solid rgba(108,63,232,0.25);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(108,63,232,0.07), rgba(33,150,243,0.05));
+  overflow: hidden;
 }
-.insta-copy-section.visible { display: flex; }
+.insta-panel.visible { display: flex; }
 
-.insta-section-title {
+.insta-panel-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  background: rgba(108,63,232,0.12);
+}
+
+.insta-panel-title {
   font-size: 13px;
   font-weight: 800;
   color: var(--t1);
   letter-spacing: -0.2px;
 }
 
+.insta-panel-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.insta-panel-close {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: var(--t3);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.insta-panel-close:hover { background: rgba(255,255,255,0.12); color: var(--t1); }
+
+.insta-panel-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.insta-col {
+  border-right: 1px solid rgba(255,255,255,0.07);
+}
+.insta-col:last-child { border-right: none; }
+
+.insta-col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+
 .insta-copy-all-btn {
-  padding: 7px 14px;
+  padding: 6px 14px;
   border-radius: 8px;
   border: 1px solid rgba(108,63,232,0.5);
   background: rgba(108,63,232,0.15);
@@ -1249,22 +1294,6 @@ body {
 }
 .insta-copy-all-btn:hover { background: rgba(108,63,232,0.3); }
 .insta-copy-all-btn.copied { background: rgba(0,201,140,0.2); color: var(--up); border-color: var(--up); }
-
-.insta-block {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.insta-block-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.03);
-}
 
 .insta-block-label {
   font-size: 12px;
@@ -1295,7 +1324,7 @@ body {
   color: var(--t2);
   white-space: pre-wrap;
   word-break: break-all;
-  max-height: 160px;
+  max-height: 200px;
   overflow-y: auto;
   font-family: 'Noto Sans KR', sans-serif;
 }
@@ -1303,7 +1332,6 @@ body {
 .hashtag-output {
   color: #60A5FA;
   font-size: 12px;
-  max-height: 80px;
 }
 
 /* ============================================================

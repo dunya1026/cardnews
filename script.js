@@ -613,11 +613,16 @@ function showInstagramSection(ig) {
   if (hashtagsOutput) hashtagsOutput.textContent = ig.hashtags   || '';
   if (followOutput)   followOutput.textContent   = ig.follow_cta || '';
   instaCopySection.classList.add('visible');
-  /* 모달 박스 안에서 아래로 스크롤 */
   setTimeout(function() {
-    var box = document.querySelector('.ai-modal-box');
-    if (box) box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+    instaCopySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 100);
+}
+
+var instaPanelClose = document.getElementById('instaPanelClose');
+if (instaPanelClose) {
+  instaPanelClose.addEventListener('click', function() {
+    if (instaCopySection) instaCopySection.classList.remove('visible');
+  });
 }
 
 /* ── 생성 버튼 ── */
@@ -657,7 +662,8 @@ if (aiGenerateBtn) {
       /* 카드 채우기 */
       fillCards(data, selectedCat);
 
-      /* 인스타그램 게시물 초안 표시 */
+      /* 모달 닫고 메인 페이지 인스타 패널 표시 */
+      closeModal();
       showInstagramSection(data.instagram);
 
       setStatus('✅ 완성! 카드 8장 + 인스타 게시물 초안이 생성됐습니다.', 'ok');
