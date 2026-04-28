@@ -613,8 +613,11 @@ function showInstagramSection(ig) {
   if (hashtagsOutput) hashtagsOutput.textContent = ig.hashtags   || '';
   if (followOutput)   followOutput.textContent   = ig.follow_cta || '';
   instaCopySection.classList.add('visible');
-  /* 스크롤을 인스타 섹션으로 */
-  setTimeout(function() { instaCopySection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+  /* 모달 박스 안에서 아래로 스크롤 */
+  setTimeout(function() {
+    var box = document.querySelector('.ai-modal-box');
+    if (box) box.scrollTo({ top: box.scrollHeight, behavior: 'smooth' });
+  }, 100);
 }
 
 /* ── 생성 버튼 ── */
