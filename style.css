@@ -129,6 +129,35 @@ body {
   accent-color: var(--s-accent);
 }
 
+/* @ 계정 핸들 입력 */
+.account-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  transition: border-color 0.2s;
+}
+.account-control:focus-within { border-color: var(--s-accent); }
+.account-at {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--s-accent);
+}
+.account-control input {
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--t1);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  width: 90px;
+}
+.account-control input::placeholder { color: var(--t4); }
+
 .btn {
   padding: 8px 16px;
   border: 1px solid var(--ui-border);
@@ -329,6 +358,45 @@ body {
 }
 .stock .account-tag       { color: var(--s-accent); }
 .realestate .account-tag  { color: var(--r-accent); }
+
+/* ============================================================
+   🎨 카드별 시각 다양화 — 상단 컬러 스트립 + 고스트 번호
+   ============================================================ */
+
+/* 상단 컬러 스트립 (카드 번호별 고유 그라디언트) */
+.card[data-pos]::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 7px;
+  z-index: 10;
+  pointer-events: none;
+}
+.card[data-pos="01"]::before { background: linear-gradient(90deg,#2196F3,#00D4AA); }
+.card[data-pos="02"]::before { background: linear-gradient(90deg,#6366f1,#a78bfa); }
+.card[data-pos="03"]::before { background: linear-gradient(90deg,#0ea5e9,#06b6d4); }
+.card[data-pos="04"]::before { background: linear-gradient(90deg,#10b981,#34d399); }
+.card[data-pos="05"]::before { background: linear-gradient(90deg,#ef4444,#f59e0b); }
+.card[data-pos="06"]::before { background: linear-gradient(90deg,#f59e0b,#fbbf24); }
+.card[data-pos="07"]::before { background: linear-gradient(90deg,#8b5cf6,#ec4899); }
+.card[data-pos="08"]::before { background: linear-gradient(90deg,#ec4899,#f43f5e); }
+
+/* 고스트 배경 번호 (카드 2-8) */
+.card[data-pos]:not(.card-hook)::after {
+  content: attr(data-pos);
+  position: absolute;
+  right: 24px;
+  bottom: -80px;
+  font-size: 500px;
+  font-weight: 900;
+  line-height: 1;
+  pointer-events: none;
+  z-index: 0;
+  letter-spacing: -30px;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.stock[data-pos]:not(.card-hook)::after    { color: rgba(33,150,243,0.04); }
+.realestate[data-pos]:not(.card-hook)::after { color: rgba(245,166,35,0.04); }
 
 /* ============================================================
    후킹 표지 (Card 1)

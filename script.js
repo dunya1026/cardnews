@@ -14,9 +14,9 @@ var EDITABLE = [
   '.persona-header', '.persona-list li',
   '.cta-title', '.cta-body', '.cta-question', '.cta-btn',
   '.category-label', '.page-num',
-  '.account-tag', '.source-text', '.disclaimer',
+  '.source-text', '.disclaimer',
   '.myth-wrong', '.myth-correct',
-].join(',');
+].join(',');  /* .account-tag 제외 — 계정은 헤더에서 일괄 설정 */
 
 var editMode = false;
 var savedRange = null; /* 색상 적용을 위한 선택 영역 저장 */
@@ -877,6 +877,42 @@ if (resetBtn) {
     localStorage.removeItem('cn_cards_' + cat);
     localStorage.removeItem('cn_insta');
     location.reload();
+  });
+}
+
+/* ============================================================
+   🎨 카드 data-pos 부여 (CSS 시각 다양화용)
+   ============================================================ */
+document.querySelectorAll('.card-set').forEach(function(set) {
+  set.querySelectorAll('.card-preview-wrap').forEach(function(wrap, i) {
+    var card = wrap.querySelector('.card');
+    if (card) card.setAttribute('data-pos', String(i + 1).padStart(2, '0'));
+  });
+});
+
+/* ============================================================
+   @ 계정 핸들 — 헤더 입력 → 전 카드 일괄 적용
+   ============================================================ */
+var accountInput = document.getElementById('accountInput');
+
+function applyAccount(raw) {
+  var val = raw ? ('@' + raw.replace(/^@+/, '')) : '';
+  document.querySelectorAll('.account-tag').forEach(function(el) {
+    el.textContent = val;
+  });
+}
+
+(function initAccount() {
+  var saved = localStorage.getItem('cn_account') || '';
+  if (accountInput) accountInput.value = saved.replace(/^@/, '');
+  applyAccount(saved);
+}());
+
+if (accountInput) {
+  accountInput.addEventListener('input', function() {
+    var v = accountInput.value.trim();
+    localStorage.setItem('cn_account', v);
+    applyAccount(v);
   });
 }
 
