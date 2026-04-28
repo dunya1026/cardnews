@@ -662,6 +662,10 @@ if (aiGenerateBtn) {
       /* 카드 채우기 */
       fillCards(data, selectedCat);
 
+      /* 카드 내용 + 인스타 초안 저장 */
+      saveCards(selectedCat);
+      saveInsta(data.instagram);
+
       /* 모달 닫고 메인 페이지 인스타 패널 표시 */
       closeModal();
       showInstagramSection(data.instagram);
@@ -676,3 +680,89 @@ if (aiGenerateBtn) {
     });
   });
 }
+
+/* ============================================================
+   💾 자동 저장 / 복원 (localStorage)
+   ============================================================ */
+
+function saveCards(category) {
+  var setEl = document.getElementById(category);
+  if (!setEl) return;
+  var articles = Array.prototype.slice.call(setEl.querySelectorAll('article.card'));
+  var htmlArr = articles.map(function(a) {
+    var clone = a.cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach(function(el) {
+      el.removeAttribute('contenteditable');
+      el.removeAttribute('spellcheck');
+    });
+    return clone.innerHTML;
+  });
+  try { localStorage.setItem('cn_cards_' + category, JSON.stringify(htmlArr)); } catch(e) {}
+  showSaveToast();
+}
+
+function loadCards(category) {
+  try {
+    var raw = localStorage.getItem('cn_cards_' + category);
+    if (!raw) return;
+    var htmlArr = JSON.parse(raw);
+    var setEl = document.getElementById(category);
+    if (!setEl) return;
+    var articles = Array.prototype.slice.call(setEl.querySelectorAll('article.card'));
+    htmlArr.forEach(function(html, i) {
+      if (articles[i] && html) articles[i].innerHTML = html;
+    });
+  } catch(e) {}
+}
+
+function saveInsta(ig) {
+  if (!ig) return;
+  try { localStorage.setItem('cn_insta', JSON.stringify(ig)); } catch(e) {}
+}
+
+function loadInsta() {
+  try {
+    var raw = localStorage.getItem('cn_insta');
+    if (!raw) return;
+    showInstagramSection(JSON.parse(raw));
+  } catch(e) {}
+}
+
+/* 저장됨 토스트 */
+var saveToastTimer;
+function showSaveToast() {
+  var toast = document.getElementById('saveToast');
+  if (!toast) return;
+  toast.classList.add('visible');
+  clearTimeout(saveToastTimer);
+  saveToastTimer = setTimeout(function() { toast.classList.remove('visible'); }, 2000);
+}
+
+/* 수동 편집 자동 저장 (2초 debounce) */
+var editSaveTimer;
+document.addEventListener('input', function(e) {
+  if (!editMode) return;
+  var set = e.target.closest('.card-set');
+  if (!set) return;
+  clearTimeout(editSaveTimer);
+  editSaveTimer = setTimeout(function() { saveCards(set.id); }, 2000);
+});
+
+/* 초기화 버튼 */
+var resetBtn = document.getElementById('resetBtn');
+if (resetBtn) {
+  resetBtn.addEventListener('click', function() {
+    var activeSet = document.querySelector('.card-set.active');
+    var cat = activeSet ? activeSet.id : null;
+    if (!cat) return;
+    if (!confirm('현재 탭(' + (cat === 'stock' ? '주식' : '부동산') + ')의 저장된 내용을 초기화할까요?\n(원래 샘플 카드로 되돌아갑니다)')) return;
+    localStorage.removeItem('cn_cards_' + cat);
+    localStorage.removeItem('cn_insta');
+    location.reload();
+  });
+}
+
+/* 페이지 로드 시 복원 */
+loadCards('stock');
+loadCards('realestate');
+loadInsta();

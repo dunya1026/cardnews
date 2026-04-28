@@ -1335,6 +1335,34 @@ body {
 }
 
 /* ============================================================
+   💾 자동 저장 토스트 + 초기화 버튼
+   ============================================================ */
+.save-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: rgba(0,201,140,0.92);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Noto Sans KR', sans-serif;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 99999;
+  pointer-events: none;
+}
+.save-toast.visible { opacity: 1; transform: translateY(0); }
+
+.btn-reset {
+  border-color: rgba(255,77,103,0.4) !important;
+  color: #FF7A8A !important;
+}
+.btn-reset:hover { background: rgba(255,77,103,0.12) !important; }
+
+/* ============================================================
    인쇄 / 내보내기 모드
    ============================================================ */
 @media print {
