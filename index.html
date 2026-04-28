@@ -104,8 +104,42 @@
         <input type="text" id="aiKeywords" placeholder="예: 거래량, 전세가율, 금리">
       </div>
 
-      <button id="aiGenerateBtn" class="ai-generate-btn">✨ 8장 자동 생성하기</button>
+      <button id="aiGenerateBtn" class="ai-generate-btn">✨ 카드 8장 + 인스타 게시물 자동 생성</button>
       <div id="aiStatus" class="ai-status"></div>
+
+      <!-- 인스타그램 게시물 초안 (생성 후 표시) -->
+      <div id="instaCopySection" class="insta-copy-section">
+
+        <div class="insta-section-title">
+          <span>📱 인스타그램 게시물 초안</span>
+          <button class="insta-copy-all-btn" id="copyAllBtn">📋 전체 복사</button>
+        </div>
+
+        <div class="insta-block">
+          <div class="insta-block-head">
+            <span class="insta-block-label">📝 본문 캡션</span>
+            <button class="insta-copy-btn" data-target="captionOutput">복사</button>
+          </div>
+          <div id="captionOutput" class="insta-output"></div>
+        </div>
+
+        <div class="insta-block">
+          <div class="insta-block-head">
+            <span class="insta-block-label"># 해시태그</span>
+            <button class="insta-copy-btn" data-target="hashtagsOutput">복사</button>
+          </div>
+          <div id="hashtagsOutput" class="insta-output hashtag-output"></div>
+        </div>
+
+        <div class="insta-block">
+          <div class="insta-block-head">
+            <span class="insta-block-label">👥 팔로우 유도 멘트</span>
+            <button class="insta-copy-btn" data-target="followOutput">복사</button>
+          </div>
+          <div id="followOutput" class="insta-output"></div>
+        </div>
+
+      </div>
 
     </div>
   </div>

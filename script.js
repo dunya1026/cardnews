@@ -348,7 +348,7 @@ function buildPrompt(topic, category, keywords) {
     ? '"card6": { "title":"제목","i1_num":"01","i1_name":"지표명","i1_desc":"설명","i2_num":"02","i2_name":"지표명","i2_desc":"설명","i3_num":"03","i3_name":"지표명","i3_desc":"설명","i4_num":"04","i4_name":"지표명","i4_desc":"설명","i5_num":"05","i5_name":"지표명","i5_desc":"설명" }'
     : '"card6": { "title":"제목","p1_header":"무주택자","p1_items":["항목1","항목2","항목3","항목4","항목5"],"p2_header":"1주택자","p2_items":["항목1","항목2","항목3","항목4","항목5"] }';
 
-  return '한국 인스타그램 ' + catKr + ' 카드뉴스 8장을 작성해주세요.\n\n'
+  return '한국 인스타그램 ' + catKr + ' 카드뉴스 8장과 인스타그램 게시물 초안을 작성해주세요.\n\n'
     + '주제: ' + topic + '\n'
     + '키워드: ' + (keywords || '없음') + '\n\n'
     + '규칙:\n'
@@ -364,7 +364,12 @@ function buildPrompt(topic, category, keywords) {
     + '  "card5": { "title":"오해섹션제목","m1_wrong":"통념1","m1_correct":"실제1","m2_wrong":"통념2","m2_correct":"실제2","m3_wrong":"통념3","m3_correct":"실제3" },\n'
     + '  ' + card6Schema + ',\n'
     + '  "card7": { "title":"체크리스트제목","c1":"항목1","c2":"항목2","c3":"항목3","c4":"항목4","c5":"항목5","c6":"항목6","c7":"항목7" },\n'
-    + '  "card8": { "title":"CTA제목(\\n구분)","body":"설명2-3문장","comment":"💬 댓글유도질문 ↓" }\n'
+    + '  "card8": { "title":"CTA제목(\\n구분)","body":"설명2-3문장","comment":"💬 댓글유도질문 ↓" },\n'
+    + '  "instagram": {\n'
+    + '    "caption": "인스타그램 본문 캡션 (실제 게시물에 바로 쓸 수 있게). 형식: 첫줄=후킹제목\\n.\\n✅ 이번 카드 핵심 포인트\\n• 포인트1\\n• 포인트2\\n• 포인트3\\n.\\n💡 체크리스트 저장해두시면 나중에 써먹을 수 있어요\\n.\\n💬 댓글유도질문\\n.\\n👉 팔로우유도멘트\\n.\\n─────────────\\n⚠️ 본 콘텐츠는 정보 제공 목적이며 투자 권유가 아닙니다",\n'
+    + '    "hashtags": "주제에 맞는 인기 해시태그 20개 (#포함, 공백구분, 주식이면 주식관련 부동산이면 부동산관련)",\n'
+    + '    "follow_cta": "팔로우를 자연스럽게 유도하는 2-3줄 멘트. 계정의 가치를 설명하고 팔로우 이유를 줘. 이모지 포함. 광고느낌 없이 친근하게"\n'
+    + '  }\n'
     + '}';
 }
 
@@ -553,6 +558,66 @@ function setStatus(msg, type) {
   aiStatus.className = 'ai-status ' + (type||'');
 }
 
+/* ── 텍스트 복사 유틸 ── */
+function copyToClipboard(text, btn) {
+  var p = navigator.clipboard && navigator.clipboard.writeText
+    ? navigator.clipboard.writeText(text)
+    : Promise.resolve().then(function() {
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      });
+  p.then(function() {
+    if (!btn) return;
+    var orig = btn.textContent;
+    btn.textContent = '✅ 복사됨';
+    btn.classList.add('copied');
+    setTimeout(function() { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+/* ── 인스타 섹션 표시 ── */
+var instaCopySection = document.getElementById('instaCopySection');
+var captionOutput    = document.getElementById('captionOutput');
+var hashtagsOutput   = document.getElementById('hashtagsOutput');
+var followOutput     = document.getElementById('followOutput');
+var copyAllBtn       = document.getElementById('copyAllBtn');
+
+/* 개별 복사 버튼 */
+document.querySelectorAll('.insta-copy-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var targetId = btn.dataset.target;
+    var el = document.getElementById(targetId);
+    if (el) copyToClipboard(el.textContent, btn);
+  });
+});
+
+/* 전체 복사 버튼 */
+if (copyAllBtn) {
+  copyAllBtn.addEventListener('click', function() {
+    var caption  = captionOutput  ? captionOutput.textContent  : '';
+    var hashtags = hashtagsOutput ? hashtagsOutput.textContent : '';
+    var follow   = followOutput   ? followOutput.textContent   : '';
+    var all = caption + '\n\n' + hashtags + '\n\n' + follow;
+    copyToClipboard(all.trim(), copyAllBtn);
+  });
+}
+
+function showInstagramSection(ig) {
+  if (!ig || !instaCopySection) return;
+  if (captionOutput)  captionOutput.textContent  = ig.caption    || '';
+  if (hashtagsOutput) hashtagsOutput.textContent = ig.hashtags   || '';
+  if (followOutput)   followOutput.textContent   = ig.follow_cta || '';
+  instaCopySection.classList.add('visible');
+  /* 스크롤을 인스타 섹션으로 */
+  setTimeout(function() { instaCopySection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
+}
+
+/* ── 생성 버튼 ── */
 if (aiGenerateBtn) {
   aiGenerateBtn.addEventListener('click', function() {
     var apiKey = localStorage.getItem('cn_api_key');
@@ -560,8 +625,11 @@ if (aiGenerateBtn) {
     var topic = (aiTopic ? aiTopic.value : '').trim();
     if (!topic) { setStatus('❌ 주제를 입력해주세요.', 'err'); return; }
 
+    /* 이전 인스타 섹션 초기화 */
+    if (instaCopySection) instaCopySection.classList.remove('visible');
+
     aiGenerateBtn.disabled = true;
-    setStatus('⏳ Claude가 콘텐츠를 생성 중입니다... (10~20초)', 'loading');
+    setStatus('⏳ Claude가 카드 + 게시물 초안을 생성 중입니다... (15~25초)', 'loading');
 
     var prompt = buildPrompt(topic, selectedCat, aiKeywords ? aiKeywords.value : '');
 
@@ -569,15 +637,13 @@ if (aiGenerateBtn) {
       var raw = res.content && res.content[0] && res.content[0].text;
       if (!raw) throw new Error('응답 내용이 비어있습니다.');
 
-      /* JSON 파싱 — 코드블록 제거 후 시도 */
       var cleaned = raw.replace(/```json\s*/g, '').replace(/```\s*/g, '').trim();
-      /* { ... } 범위만 추출 */
       var start = cleaned.indexOf('{');
       var end   = cleaned.lastIndexOf('}');
       if (start === -1 || end === -1) throw new Error('JSON 형식을 찾을 수 없습니다.');
       var data = JSON.parse(cleaned.slice(start, end + 1));
 
-      /* 탭을 생성한 카테고리로 전환 */
+      /* 탭 전환 */
       document.querySelectorAll('.tab').forEach(function(t) {
         t.classList.toggle('active', t.dataset.target === selectedCat);
       });
@@ -585,10 +651,13 @@ if (aiGenerateBtn) {
         s.classList.toggle('active', s.id === selectedCat);
       });
 
+      /* 카드 채우기 */
       fillCards(data, selectedCat);
-      setStatus('✅ 완성! 카드 내용이 자동으로 채워졌습니다. 편집 모드에서 수정할 수 있어요.', 'ok');
 
-      setTimeout(function() { closeModal(); }, 1800);
+      /* 인스타그램 게시물 초안 표시 */
+      showInstagramSection(data.instagram);
+
+      setStatus('✅ 완성! 카드 8장 + 인스타 게시물 초안이 생성됐습니다.', 'ok');
 
     }).catch(function(err) {
       console.error(err);

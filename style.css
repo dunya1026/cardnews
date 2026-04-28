@@ -1211,6 +1211,102 @@ body {
 .ai-status.err     { color: var(--down); }
 
 /* ============================================================
+   인스타그램 게시물 초안 섹션
+   ============================================================ */
+.ai-modal-box { max-height: 90vh; overflow-y: auto; }
+
+.insta-copy-section {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 20px;
+  margin-top: 4px;
+}
+.insta-copy-section.visible { display: flex; }
+
+.insta-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--t1);
+  letter-spacing: -0.2px;
+}
+
+.insta-copy-all-btn {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(108,63,232,0.5);
+  background: rgba(108,63,232,0.15);
+  color: #A78BFA;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.insta-copy-all-btn:hover { background: rgba(108,63,232,0.3); }
+.insta-copy-all-btn.copied { background: rgba(0,201,140,0.2); color: var(--up); border-color: var(--up); }
+
+.insta-block {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.insta-block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.03);
+}
+
+.insta-block-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--t3);
+  letter-spacing: 0.3px;
+}
+
+.insta-copy-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: var(--t2);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.insta-copy-btn:hover  { background: rgba(255,255,255,0.12); color: var(--t1); }
+.insta-copy-btn.copied { background: rgba(0,201,140,0.2); color: var(--up); border-color: var(--up); }
+
+.insta-output {
+  padding: 14px;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--t2);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 160px;
+  overflow-y: auto;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.hashtag-output {
+  color: #60A5FA;
+  font-size: 12px;
+  max-height: 80px;
+}
+
+/* ============================================================
    인쇄 / 내보내기 모드
    ============================================================ */
 @media print {
