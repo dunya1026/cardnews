@@ -30,9 +30,38 @@
       <span id="scaleValue">42%</span>
     </div>
     <button class="btn" id="editBtn">✏️ 편집 모드</button>
-    <button class="btn" onclick="window.print()">🖨️ 인쇄/내보내기</button>
+    <div class="range-control">
+      <span class="range-label">일괄 저장</span>
+      <input type="number" id="rangeFrom" value="1" min="1" max="8">
+      <span class="range-sep">~</span>
+      <input type="number" id="rangeTo" value="8" min="1" max="8">
+      <span class="range-label">번</span>
+      <button class="btn" id="batchBtn">📦 저장</button>
+    </div>
+    <button class="btn" onclick="window.print()">🖨️ 인쇄</button>
   </div>
 </header>
+
+<!-- 색상 툴바 (편집 모드 전용) -->
+<div id="colorToolbar">
+  <span class="toolbar-label">🎨 글씨 색</span>
+  <div class="color-swatches">
+    <button class="swatch" data-color="#FFFFFF" style="background:#FFFFFF" title="흰색"></button>
+    <button class="swatch" data-color="#000000" style="background:#000000" title="검정"></button>
+    <button class="swatch" data-color="#2196F3" style="background:#2196F3" title="블루"></button>
+    <button class="swatch" data-color="#00D4AA" style="background:#00D4AA" title="민트"></button>
+    <button class="swatch" data-color="#F5A623" style="background:#F5A623" title="골드"></button>
+    <button class="swatch" data-color="#FF6B35" style="background:#FF6B35" title="오렌지"></button>
+    <button class="swatch" data-color="#00C98C" style="background:#00C98C" title="그린"></button>
+    <button class="swatch" data-color="#FF4D67" style="background:#FF4D67" title="레드"></button>
+    <button class="swatch" data-color="#FFB020" style="background:#FFB020" title="옐로우"></button>
+    <button class="swatch" data-color="#9BA8BF" style="background:#9BA8BF" title="그레이"></button>
+  </div>
+  <label class="custom-color-wrap" title="직접 선택">
+    <span>직접</span>
+    <input type="color" id="customColorPicker" value="#FFFFFF">
+  </label>
+</div>
 
 
 <!-- ======================================================
