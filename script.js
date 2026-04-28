@@ -374,6 +374,11 @@ function buildPrompt(topic, category, keywords, research) {
     + '    "caption": "인스타그램 본문 캡션 (실제 게시물에 바로 쓸 수 있게). 형식: 첫줄=후킹제목\\n.\\n✅ 이번 카드 핵심 포인트\\n• 포인트1\\n• 포인트2\\n• 포인트3\\n.\\n💡 체크리스트 저장해두시면 나중에 써먹을 수 있어요\\n.\\n💬 댓글유도질문\\n.\\n👉 팔로우유도멘트\\n.\\n─────────────\\n⚠️ 본 콘텐츠는 정보 제공 목적이며 투자 권유가 아닙니다",\n'
     + '    "hashtags": "주제에 맞는 인기 해시태그 20개 (#포함, 공백구분, 주식이면 주식관련 부동산이면 부동산관련)",\n'
     + '    "follow_cta": "팔로우를 자연스럽게 유도하는 2-3줄 멘트. 계정의 가치를 설명하고 팔로우 이유를 줘. 이모지 포함. 광고느낌 없이 친근하게"\n'
+    + '  },\n'
+    + '  "naver_blog": {\n'
+    + '    "title": "네이버 검색에 노출될 SEO 최적화 제목 (30자 이내, 핵심 키워드 포함)",\n'
+    + '    "content": "네이버 블로그 본문 전체. 1200~1800자. 형식(\\n으로 줄바꿈): [서론 — 공감·질문으로 시작, 3~4문장]\\n\\n[소제목1]\\n내용 3~4문장\\n\\n[소제목2]\\n내용 3~4문장\\n\\n[소제목3]\\n내용 3~4문장\\n\\n[핵심 체크리스트]\\n✅ 항목1\\n✅ 항목2\\n✅ 항목3\\n\\n[마무리 — 정보성 멘트 + 댓글·공감 유도]\\n\\n※ 본 포스팅은 정보 제공 목적이며 투자 권유가 아닙니다.",\n'
+    + '    "tags": "네이버 블로그 태그 15개 (쉼표 구분, #없이, 검색량 많은 키워드 위주)"\n'
     + '  }\n'
     + '}';
 }
@@ -618,6 +623,54 @@ function copyToClipboard(text, btn) {
   });
 }
 
+/* ── 블로그 패널 ── */
+var blogPanel      = document.getElementById('blogPanel');
+var blogTitle      = document.getElementById('blogTitle');
+var blogContent    = document.getElementById('blogContent');
+var blogTags       = document.getElementById('blogTags');
+var blogCopyAllBtn = document.getElementById('blogCopyAllBtn');
+var blogPanelClose = document.getElementById('blogPanelClose');
+
+document.querySelectorAll('.blog-copy-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var el = document.getElementById(btn.dataset.target);
+    if (el) copyToClipboard(el.textContent, btn);
+  });
+});
+if (blogCopyAllBtn) {
+  blogCopyAllBtn.addEventListener('click', function() {
+    var title   = blogTitle   ? blogTitle.textContent   : '';
+    var content = blogContent ? blogContent.textContent : '';
+    var tags    = blogTags    ? blogTags.textContent    : '';
+    var all = '[제목]\n' + title + '\n\n[본문]\n' + content + '\n\n[태그]\n' + tags;
+    copyToClipboard(all.trim(), blogCopyAllBtn);
+  });
+}
+if (blogPanelClose) {
+  blogPanelClose.addEventListener('click', function() {
+    if (blogPanel) blogPanel.classList.remove('visible');
+  });
+}
+
+function showBlogSection(blog) {
+  if (!blog || !blogPanel) return;
+  if (blogTitle)   blogTitle.textContent   = blog.title   || '';
+  if (blogContent) blogContent.textContent = blog.content || '';
+  if (blogTags)    blogTags.textContent    = blog.tags    || '';
+  blogPanel.classList.add('visible');
+}
+
+function saveBlog(blog) {
+  if (!blog) return;
+  try { localStorage.setItem('cn_blog', JSON.stringify(blog)); } catch(e) {}
+}
+function loadBlog() {
+  try {
+    var raw = localStorage.getItem('cn_blog');
+    if (raw) showBlogSection(JSON.parse(raw));
+  } catch(e) {}
+}
+
 /* ── 인스타 섹션 표시 ── */
 var instaCopySection = document.getElementById('instaCopySection');
 var captionOutput    = document.getElementById('captionOutput');
@@ -725,13 +778,15 @@ if (aiGenerateBtn) {
       /* 카드 채우기 */
       fillCards(data, selectedCat);
 
-      /* 카드 내용 + 인스타 초안 저장 */
+      /* 카드 내용 + 인스타 + 블로그 저장 */
       saveCards(selectedCat);
       saveInsta(data.instagram);
+      saveBlog(data.naver_blog);
 
-      /* 모달 닫고 메인 페이지 인스타 패널 표시 */
+      /* 모달 닫고 패널들 표시 */
       closeModal();
       showInstagramSection(data.instagram);
+      showBlogSection(data.naver_blog);
 
       setStatus('✅ 완성! 카드 8장 + 인스타 게시물 초안이 생성됐습니다.', 'ok');
 
@@ -829,3 +884,4 @@ if (resetBtn) {
 loadCards('stock');
 loadCards('realestate');
 loadInsta();
+loadBlog();

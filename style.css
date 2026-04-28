@@ -1335,6 +1335,127 @@ body {
 }
 
 /* ============================================================
+   📝 네이버 블로그 초안 패널
+   ============================================================ */
+.blog-panel {
+  display: none;
+  flex-direction: column;
+  margin: 0 24px 24px;
+  border: 1px solid rgba(0,201,140,0.2);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(0,201,140,0.05), rgba(33,150,243,0.04));
+  overflow: hidden;
+}
+.blog-panel.visible { display: flex; }
+
+.blog-panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  background: rgba(0,201,140,0.08);
+}
+.blog-panel-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--t1);
+}
+.blog-panel-actions { display: flex; align-items: center; gap: 8px; }
+
+.blog-copy-all-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0,201,140,0.4);
+  background: rgba(0,201,140,0.12);
+  color: #34D399;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.blog-copy-all-btn:hover { background: rgba(0,201,140,0.22); }
+.blog-copy-all-btn.copied { background: rgba(0,201,140,0.3); color: #fff; }
+
+.blog-panel-close {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: var(--t3);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.blog-panel-close:hover { background: rgba(255,255,255,0.12); color: var(--t1); }
+
+.blog-panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.blog-row {
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.blog-row:last-child { border-bottom: none; }
+
+.blog-field-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.02);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.blog-field-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--t3);
+}
+.blog-copy-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: var(--t2);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.blog-copy-btn:hover { background: rgba(255,255,255,0.12); color: var(--t1); }
+.blog-copy-btn.copied { background: rgba(0,201,140,0.2); color: var(--up); border-color: var(--up); }
+
+.blog-output {
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--t1);
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.blog-title-output {
+  font-size: 15px;
+  font-weight: 700;
+  color: #60A5FA;
+}
+.blog-content-output {
+  max-height: 320px;
+  overflow-y: auto;
+  font-size: 13px;
+  color: var(--t2);
+}
+.blog-tags-output {
+  color: #34D399;
+  font-size: 12px;
+}
+
+/* ============================================================
    💾 자동 저장 토스트 + 초기화 버튼
    ============================================================ */
 .save-toast {
