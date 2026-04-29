@@ -62,6 +62,48 @@ if (slider) {
 var editBtn      = document.getElementById('editBtn');
 var colorToolbar = document.getElementById('colorToolbar');
 
+/* ── 색상 툴바 드래그 이동 ── */
+(function() {
+  var tb = colorToolbar;
+  if (!tb) return;
+  var handle = tb.querySelector('.toolbar-drag');
+  if (!handle) return;
+
+  var dragging = false, ox = 0, oy = 0;
+
+  handle.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    dragging = true;
+    tb.classList.add('dragging');
+
+    /* 현재 실제 위치를 left/top으로 고정 (transform 제거) */
+    var rect = tb.getBoundingClientRect();
+    tb.style.transform = 'none';
+    tb.style.left = rect.left + 'px';
+    tb.style.top  = rect.top  + 'px';
+
+    ox = e.clientX - rect.left;
+    oy = e.clientY - rect.top;
+  });
+
+  document.addEventListener('mousemove', function(e) {
+    if (!dragging) return;
+    var x = e.clientX - ox;
+    var y = e.clientY - oy;
+    /* 화면 밖으로 나가지 않도록 제한 */
+    x = Math.max(0, Math.min(window.innerWidth  - tb.offsetWidth,  x));
+    y = Math.max(0, Math.min(window.innerHeight - tb.offsetHeight, y));
+    tb.style.left = x + 'px';
+    tb.style.top  = y + 'px';
+  });
+
+  document.addEventListener('mouseup', function() {
+    if (!dragging) return;
+    dragging = false;
+    tb.classList.remove('dragging');
+  });
+}());
+
 if (editBtn) {
   editBtn.addEventListener('click', function() {
     editMode = !editMode;

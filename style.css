@@ -1031,8 +1031,21 @@ body {
   z-index: 500;
   box-shadow: 0 8px 40px rgba(0,0,0,0.5);
   white-space: nowrap;
+  user-select: none;
 }
 #colorToolbar.visible { display: flex; }
+#colorToolbar.dragging { box-shadow: 0 16px 60px rgba(0,0,0,0.7); }
+
+.toolbar-drag {
+  font-size: 16px;
+  color: rgba(255,255,255,0.35);
+  cursor: grab;
+  padding: 0 4px 0 0;
+  line-height: 1;
+  transition: color 0.15s;
+}
+.toolbar-drag:hover { color: rgba(255,255,255,0.7); }
+.toolbar-drag:active { cursor: grabbing; }
 
 .toolbar-label {
   font-size: 12px;
